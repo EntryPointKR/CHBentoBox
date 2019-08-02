@@ -2,13 +2,17 @@ package kr.entree.chbentobox;
 
 import com.laytonsmith.PureUtilities.SimpleVersion;
 import com.laytonsmith.PureUtilities.Version;
+import com.laytonsmith.abstraction.bukkit.BukkitMCLocation;
 import com.laytonsmith.commandhelper.CommandHelperPlugin;
+import com.laytonsmith.core.ObjectGenerator;
 import com.laytonsmith.core.constructs.*;
 import com.laytonsmith.core.extensions.AbstractExtension;
 import com.laytonsmith.core.extensions.MSExtension;
+import com.laytonsmith.core.natives.interfaces.Mixed;
 import com.mongodb.internal.connection.CommandHelper;
 import kr.entree.chbentobox.processor.BentoBoxEventNotifier;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 import world.bentobox.bentobox.database.objects.Island;
 
@@ -26,6 +30,7 @@ public class CHBentoBox extends AbstractExtension {
         CArray array = CArray.GetAssociativeArray(t);
         CArray members = new CArray(t);
         CArray bannedMembers = new CArray(t);
+        Location center = island.getCenter();
         for (Map.Entry<UUID, Integer> entry : island.getMembers().entrySet()) {
             members.push(new CString(entry.getKey().toString(), t), t);
         }
@@ -38,6 +43,10 @@ public class CHBentoBox extends AbstractExtension {
         array.set("members", members, t);
         array.set("banned", bannedMembers, t);
         array.set("created", new CInt(island.getCreatedDate(), t), t);
+        Mixed centerLoc = center != null
+                ? ObjectGenerator.GetGenerator().location(new BukkitMCLocation(island.getCenter()))
+                : CNull.NULL;
+        array.set("center", centerLoc, t);
         return array;
     }
 
