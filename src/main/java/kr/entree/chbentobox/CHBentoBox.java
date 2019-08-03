@@ -57,7 +57,6 @@ public class CHBentoBox extends AbstractExtension {
 
     @Override
     public void onStartup() {
-        HandlerList.unregisterAll(notifier);
         Bukkit.getPluginManager().registerEvents(notifier, CommandHelperPlugin.self);
     }
 
